@@ -21,7 +21,7 @@ static int gettok() {
 
     // Skip any whitspace.
     while (isspace(LastChar))
-        LastChar = getchar;
+        LastChar = getchar();
 
     if (isalpha(LastChar)) { // identifier: [a-zA-Z][a-zA-Z0-9]*
         IdentifierStr = LastChar;
@@ -30,4 +30,18 @@ static int gettok() {
 
         if (IdentifierStr == "def")
             return tok_def;
-        if
+        if (IdentifierStr == "extern")
+            return token_extern;
+        return tok_identifier;
+    }
+
+    if (isdigit(LastChar) || LastChar == ".") { // Number [0-9.]+
+        std::string NumStr;
+        do {
+            NumStr += LastChar;
+            LastChar = getchar();
+        } while (isdigit(LastChar) || LastChar == ".");
+
+        NumVal = strtod(NumStr.c_str(), 0);
+        return tok_number;
+    }
